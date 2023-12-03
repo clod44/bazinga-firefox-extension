@@ -1,37 +1,36 @@
 
-
-
-
-
-const downloadBtn = document.getElementById("downloadBtn");
-const countRange = document.getElementById("downloadRange");
-countRange.defaultValue = 50;
-
-const count = document.getElementById("downloadCount");
-count.defaultValue = 50;
-    
-
-downloadBtn.addEventListener("click", () =>{
+document.getElementById("form").addEventListener("submit", () => {
     browser.tabs.query({
         currentWindow: true
-    }).then((tabs)=>{
-        for(let tab of tabs){
-            browser.tabs.sendMessage(tab.id,{
-                command: "downloadImages",
-                imageCount: count.value
-            }).catch((err) => {
-                alert(err);
-                return;
-            });
+    }).then((tabs) => {
+        if (Number.isInteger(imageCount.value.length) || imageCount.value > 0) {
+            for (let tab of tabs) {
+
+                browser.tabs.sendMessage(tab.id, {
+                    command: "downloadImages",
+                    imageCount: imageCount.value
+                }).catch((err) => {
+                    alert(err);
+                    return;
+                });
+
+            }
+        } else {
+            alert("Invalid Image Count");
         }
     });
-    //document.body.style.background = `rgb(${Math.random()*255},${Math.random()*255},${Math.random()*255})`;
+    imageCount.style.background = `rgb(${Math.random() * 255},${Math.random() * 255},${Math.random() * 255})`;
+});
+
+const imageCount = document.getElementById("image-count");
+const sldrImageCount = document.getElementById("sldr-image-count");
+
+sldrImageCount.addEventListener("change", () => {
+    imageCount.value = sldrImageCount.value;
 });
 
 
-countRange.addEventListener("change",()=>{
-    count.value = countRange.value;
-});
+
 
 
 
